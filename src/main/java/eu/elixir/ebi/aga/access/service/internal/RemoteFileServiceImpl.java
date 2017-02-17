@@ -16,13 +16,21 @@
 package eu.elixir.ebi.aga.access.service.internal;
 
 import eu.elixir.ebi.aga.access.dto.File;
+import eu.elixir.ebi.aga.access.service.FileService;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import eu.elixir.ebi.aga.access.service.FileService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  *
@@ -33,26 +41,42 @@ import eu.elixir.ebi.aga.access.service.FileService;
 @EnableDiscoveryClient
 public class RemoteFileServiceImpl implements FileService {
 
-    private final String SERVICE_URL = "http://DATA";
+    private final String SERVICE_URL = "http://DOWNLOADER";
     
     @Autowired
     RestTemplate restTemplate;
 
     @Override
-    public File getFile(String user_email, String file_id) {
+    public File getFile(Authentication auth, String file_id) {
         ResponseEntity<File[]> forEntity = restTemplate.getForEntity(SERVICE_URL + "/file/{file_id}", File[].class, file_id);
 
+        // Obtain all Authorised Datasets
+        HashSet<String> permissions = new HashSet<>();
+        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        while (iterator.hasNext()) {
+            GrantedAuthority next = iterator.next();
+            permissions.add(next.getAuthority());
+        }
+        
+        // Is this File in at least one Authoised Dataset?
         File[] body = forEntity.getBody();
         if (body!=null) {
             for (File f:body) {
                 String dataset_id = f.getDatasetStableId();
-                String permission = restTemplate.getForObject(SERVICE_URL + "/user/{user_email}/datasets/{dataset_id}/", String.class, user_email, dataset_id);
-                if (permission.equalsIgnoreCase("approved")) {
+                if (permissions.contains(dataset_id)) {
                     return f;
                 }
             }
         }
+        
         return (new File());
+    }
+    
+    @Override
+    public Iterable<File> getDatasetFiles(String dataset_id) {
+        File[] response = restTemplate.getForObject(SERVICE_URL + "/file/datasets/{dataset_id}/", File[].class, dataset_id);
+        return Arrays.asList(response);
     }
     
 }

@@ -16,19 +16,22 @@
 package eu.elixir.ebi.aga.access.rest;
 
 import eu.elixir.ebi.aga.access.dto.File;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import eu.elixir.ebi.aga.access.service.FileService;
 
-import org.springframework.web.bind.annotation.PathVariable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import org.springframework.web.bind.annotation.ResponseBody;
-import eu.elixir.ebi.aga.access.service.DatasetService;
-import java.security.Principal;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PathVariable;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  *
@@ -40,34 +43,38 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class DatasetController {
     
     @Autowired
-    private DatasetService datasetService;
-
+    private FileService fileService;
+    
     @RequestMapping(method = GET)
     public @ResponseBody Iterable<String> list() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String user_email = auth.getName();
-        return datasetService.getDatasets(user_email);
+        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        ArrayList<String> result = new ArrayList<>();
+        while (iterator.hasNext()) {
+            GrantedAuthority next = iterator.next();
+            result.add(next.getAuthority());
+        }
+        return result; // List of datasets authorized for this user
     }
-    
+        
     @RequestMapping(value = "/{dataset_id}/files", method = GET)
     public @ResponseBody Iterable<File> getDatasetFiles(@PathVariable String dataset_id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String user_email = auth.getName();
-        return datasetService.getDatasetFiles(user_email, dataset_id);
-    }
-    
-    // Test Code Below ----
-    @RequestMapping("/unprotected")
-    public String unprotected() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String name = auth.getName(); //get logged in username
-        boolean a = auth.isAuthenticated();
-        return "Should be unprotected, no sign-in needed " + name + ", " + a;
-    }
-    @RequestMapping("/protected")
-    public String yesProtected(Principal principal) {
+
+        // Validate Dataset Access
+        boolean permission = false;
+        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        while (iterator.hasNext()) {
+            GrantedAuthority next = iterator.next();
+            if (dataset_id.equalsIgnoreCase(next.getAuthority())) {
+                permission = true;
+                break;
+            }
+        }
         
-        return "In order to see this, you should have had to authenticate via an OAuth2 Authorization Server, " + principal.toString() + "  \n";
+        return permission?(fileService.getDatasetFiles(dataset_id)):(new ArrayList<>());
     }
-    
+
 }

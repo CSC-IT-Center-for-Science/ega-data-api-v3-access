@@ -32,7 +32,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.provider.authentication.BearerTokenExtractor;
 import org.springframework.security.oauth2.provider.authentication.TokenExtractor;
 import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -80,7 +79,8 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
         // customized User Authentication Converter simply changes the field name for extraction
         @Bean
 	public AccessTokenConverter accessTokenConverter() {
-                DefaultAccessTokenConverter myAccessTokenConverter = new DefaultAccessTokenConverter();
+                //DefaultAccessTokenConverter myAccessTokenConverter = new DefaultAccessTokenConverter();
+                MyAccessTokenConverter myAccessTokenConverter = new MyAccessTokenConverter();
                 myAccessTokenConverter.setUserTokenConverter(new MyUserAuthenticationConverter());
                 return myAccessTokenConverter;
 		//return new DefaultAccessTokenConverter();

@@ -16,6 +16,7 @@
 package eu.elixir.ebi.aga.access.service;
 
 import eu.elixir.ebi.aga.access.dto.File;
+import org.springframework.security.core.Authentication;
 
 /**
  *
@@ -23,6 +24,8 @@ import eu.elixir.ebi.aga.access.dto.File;
  */
 public interface FileService {
     
-    public File getFile(String user_email, String file_id);
+    public File getFile(Authentication auth, String file_id);
+
+    public Iterable<File> getDatasetFiles(String dataset_id);
     
 }

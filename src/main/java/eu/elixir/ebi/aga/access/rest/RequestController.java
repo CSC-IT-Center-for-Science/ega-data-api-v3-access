@@ -61,10 +61,9 @@ public class RequestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void newRequest(@RequestBody List<Request> requests) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String user_email = auth.getName();
         String ip = "TODO";
         for (Request request:requests) {
-            requestService.newRequest(user_email, ip, request);
+            requestService.newRequest(auth, ip, request);
         }
     }
 

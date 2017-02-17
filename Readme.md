@@ -27,6 +27,8 @@ An access token obtained with client credentials (grant_type=client_credentials)
 [GET] `/requests/{request_label}/tickets/{ticket}`
 [DELETE] `/requests/{request_label}/tickets/{ticket}`
 [DELETE] `/requests/{request_label}`
+
+Only at Central EGA:
 [GET]	`/app/orgs`
 [GET]	`/app/datasets`
 [GET]	`/app/datasets/{dataset_id}/files`

@@ -31,6 +31,9 @@ public interface AppService {
     public Iterable<String> getDatasets();
 
     @PreAuthorize("#oauth2.hasScope('fuse')")
+    public Iterable<String> getDatasetsByOrg(String org);
+    
+    @PreAuthorize("#oauth2.hasScope('fuse')")
     public Iterable<File> getDatasetFiles(String datasetId);
     
     @PreAuthorize("#oauth2.hasScope('fuse')")

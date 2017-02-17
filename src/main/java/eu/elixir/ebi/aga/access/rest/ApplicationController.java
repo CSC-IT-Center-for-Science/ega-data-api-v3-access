@@ -58,6 +58,11 @@ public class ApplicationController {
         return appService.getDatasets();
     }
     
+    @RequestMapping(value = "/datasets/{org}", method = GET)
+    public @ResponseBody Iterable<String> listDatasets(@PathVariable String org) {
+        return appService.getDatasetsByOrg(org);
+    }
+    
     @RequestMapping(value = "/datasets/{dataset_id}/files", method = GET)
     public @ResponseBody Iterable<File> getDatasetFiles(@PathVariable String dataset_id) {
         return appService.getDatasetFiles(dataset_id);

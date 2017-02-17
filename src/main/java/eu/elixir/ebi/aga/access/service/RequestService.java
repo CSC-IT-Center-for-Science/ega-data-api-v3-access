@@ -18,6 +18,8 @@ package eu.elixir.ebi.aga.access.service;
 import eu.elixir.ebi.aga.access.dto.Request;
 import eu.elixir.ebi.aga.access.dto.RequestTicket;
 
+import org.springframework.security.core.Authentication;
+
 /**
  *
  * @author asenf
@@ -26,7 +28,7 @@ public interface RequestService {
 
     public Iterable<String> listRequests(String user_email);
     
-    public void newRequest(String user_email, String ip, Request request);
+    public void newRequest(Authentication auth, String ip, Request request);
     
     public Iterable<RequestTicket> listRequestTickets(String user_email, String request_label);
     

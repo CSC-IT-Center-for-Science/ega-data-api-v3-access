@@ -18,8 +18,10 @@ package eu.elixir.ebi.aga.access.service.internal;
 import eu.elixir.ebi.aga.access.dto.Dataset;
 import eu.elixir.ebi.aga.access.dto.File;
 import eu.elixir.ebi.aga.access.service.AppService;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.stereotype.Service;
@@ -58,6 +60,18 @@ public class RemoteAppServiceImpl implements AppService {
     @Override
     public Iterable<String> getDatasets() {
         Dataset[] response = restTemplate.getForObject(SERVICE_URL + "/datasets/", Dataset[].class);
+
+        ArrayList<String> datasetIds = new ArrayList<>();
+        for (Dataset dataset:response) {
+            datasetIds.add(dataset.getStableId());
+        }
+        
+        return datasetIds;
+    }
+    
+    @Override
+    public Iterable<String> getDatasetsByOrg(String org) {
+        Dataset[] response = restTemplate.getForObject(SERVICE_URL + "/datasets/org/{org}", Dataset[].class, org);
 
         ArrayList<String> datasetIds = new ArrayList<>();
         for (Dataset dataset:response) {

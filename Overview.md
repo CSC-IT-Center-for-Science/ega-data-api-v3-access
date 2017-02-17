@@ -13,10 +13,10 @@ The Configuration server serves all `'application.configration'` files to the re
 Without these two services the remaining microservices will not function properly.
 
 There are two microservices interfacing with a database:
-* DATA
+* DATA [OPTIONAL - This is only required for Central EGA deployments]
 * DOWNLOADER
 
-The DATA service reads (read-only) file-related information (archive paths; file-dataset associations; etc.) while the DOWNLOADER service keeps track of download requests and logs (read/write). It write and updates download requests and logs download avtivity in a database.
+The DATA service provides dataset-related information (not tied to individual users) while the DOWNLOADER service provides all user-related information and keeps track of download requests and logs (read/write). It write and updates download requests and logs download avtivity in a database.
 
 Two microservices provide publicly accessible Edge services:
 * ACCESS
@@ -46,7 +46,7 @@ The CPU heavy cryptographic work is performed by the RES service, supported by a
     * Required By: RES
 * DATA
     * Requires: EUREKA, CONFIG
-    * Required By: ACCESS
+    * Required By: ACCESS [Only at Central EGA]
 * DOWNLOADER
     * Requires: EUREKA, CONFIG
     * Required By: ACCESS, DATAEDGE
@@ -63,7 +63,6 @@ The CPU heavy cryptographic work is performed by the RES service, supported by a
 ### Todos
 
  - Write Tests
- - Move Authorisations to EGA AAI
 
 License
 ----

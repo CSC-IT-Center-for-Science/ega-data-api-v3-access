@@ -30,7 +30,12 @@ import eu.elixir.ebi.aga.access.service.RequestService;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.UUID;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  *
@@ -41,7 +46,6 @@ import java.util.UUID;
 @EnableDiscoveryClient
 public class RemoteRequestServiceImpl implements RequestService {
 
-    private final String DATA_URL = "http://DATA";
     private final String SERVICE_URL = "http://DOWNLOADER";
     
     @Autowired
@@ -54,19 +58,29 @@ public class RemoteRequestServiceImpl implements RequestService {
     }
 
     @Override
-    public void newRequest(String user_email, String ip, Request request) {
+    public void newRequest(Authentication auth, String ip, Request request) {
+        String user_email = auth.getName();
+        
         // Process: Turn a 'Request' into a List<RequestTicket> ()
         ArrayList<File> requestFiles = new ArrayList<>();
 
+        // Obtain all Authorised Datasets
+        HashSet<String> permissions = new HashSet<>();
+        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        while (iterator.hasNext()) {
+            GrantedAuthority next = iterator.next();
+            permissions.add(next.getAuthority());
+        }
+        
         // Check Permissions (To Be changed later....)
         if (request.getType().equalsIgnoreCase("file")) {   // Request for 1 File
-            ResponseEntity<File[]> forEntity = restTemplate.getForEntity(DATA_URL + "/file/{file_id}", File[].class, request.getId());
+            ResponseEntity<File[]> forEntity = restTemplate.getForEntity(SERVICE_URL + "/file/{file_id}", File[].class, request.getId());
             File[] forEntityBody = forEntity.getBody();
             if (forEntityBody != null && forEntityBody.length>0) {
                 for (int i=0; i<forEntityBody.length; i++) {
                     String dataset_id = forEntityBody[i].getDatasetStableId();
-                    String permission = restTemplate.getForObject(DATA_URL + "/user/{user_email}/datasets/{dataset_id}/", String.class, user_email, dataset_id);
-                    if(permission!=null && permission.equalsIgnoreCase("approved")) {
+                    if(permissions.contains(dataset_id)) {
                         requestFiles.add(forEntityBody[i]);
                         break;
                     }
@@ -78,9 +92,9 @@ public class RemoteRequestServiceImpl implements RequestService {
                 throw new NotFoundException("File not Found", request.getId());
             }
         } else {    // Request for a Dataset
-            String permission = restTemplate.getForObject(DATA_URL + "/user/{user_email}/datasets/{dataset_id}/", String.class, user_email, request.getId());
-            if(permission!=null && permission.equalsIgnoreCase("approved")) {
-                File[] files = restTemplate.getForObject(DATA_URL + "/datasets/{dataset_id}/files/", File[].class, request.getId());
+            
+            if(permissions.contains(request.getId())) {
+                File[] files = restTemplate.getForObject(SERVICE_URL + "/datasets/{dataset_id}/files/", File[].class, request.getId());
                 requestFiles.addAll(Arrays.asList(files));
             } else {
                 throw new PermissionsException("Not Permitted access to Dataset", request.getId());

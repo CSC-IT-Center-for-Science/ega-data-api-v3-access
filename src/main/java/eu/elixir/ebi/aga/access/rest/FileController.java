@@ -43,8 +43,8 @@ public class FileController {
     @ResponseBody
     public File getFile(@PathVariable String file_id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String user_email = auth.getName();
-        return fileService.getFile(user_email, file_id);
+        // I don't know the dataset ID yet - pass on auth object to implementation for access control
+        return fileService.getFile(auth, file_id);
     }
-    
+
 }
