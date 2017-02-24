@@ -69,7 +69,9 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
                         .antMatchers("/files/**")
                         .antMatchers("/requests/**")
                         .antMatchers("/app/**")
-                        .antMatchers("/datasets/ega").and()
+                        .antMatchers("/datasets/ega")
+                        .antMatchers("/swagger-ui.html")
+                        .antMatchers("/v2/api-docs").and()
                         .authorizeRequests().anyRequest().authenticated()
                         .and()
                         .csrf().disable();
