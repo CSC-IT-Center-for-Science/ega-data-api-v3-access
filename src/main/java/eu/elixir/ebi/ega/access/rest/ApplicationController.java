@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access.rest;
+package eu.elixir.ebi.ega.access.rest;
 
-import eu.elixir.ebi.aga.access.dto.File;
-import eu.elixir.ebi.aga.access.service.AppService;
+import eu.elixir.ebi.ega.access.dto.File;
+import eu.elixir.ebi.ega.access.service.AppService;
 import java.util.Collection;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;

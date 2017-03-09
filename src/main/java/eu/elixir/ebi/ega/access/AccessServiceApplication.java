@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access;
+package eu.elixir.ebi.ega.access;
 
-import eu.elixir.ebi.aga.access.config.MyConfiguration;
-import eu.elixir.ebi.aga.access.config.OAuth2ResourceConfig;
+import eu.elixir.ebi.ega.access.config.MyConfiguration;
+import eu.elixir.ebi.ega.access.config.OAuth2ResourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;

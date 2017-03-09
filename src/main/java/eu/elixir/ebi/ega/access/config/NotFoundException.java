@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access.service;
+package eu.elixir.ebi.ega.access.config;
 
-import eu.elixir.ebi.aga.access.dto.File;
-import org.springframework.security.core.Authentication;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  *
  * @author asenf
  */
-public interface FileService {
-    
-    public File getFile(Authentication auth, String file_id);
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class NotFoundException extends RuntimeException {
 
-    public Iterable<File> getDatasetFiles(String dataset_id);
-    
+	private static final long serialVersionUID = 1L;
+
+	public NotFoundException(String error, String id) {
+		super(error + ": " + id);
+	}
 }

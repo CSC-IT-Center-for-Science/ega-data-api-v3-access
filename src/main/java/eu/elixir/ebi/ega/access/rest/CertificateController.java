@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access.rest;
+package eu.elixir.ebi.ega.access.rest;
 
-import eu.elixir.ebi.aga.access.config.PermissionsException;
+import eu.elixir.ebi.ega.access.config.PermissionsException;
 import java.io.IOException;
 import javax.security.cert.Certificate;
 import javax.servlet.http.HttpServletRequest;

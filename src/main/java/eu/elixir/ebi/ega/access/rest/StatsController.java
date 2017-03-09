@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access.rest;
+package eu.elixir.ebi.ega.access.rest;
 
 import java.lang.management.ManagementFactory;
+import java.util.List;
+import java.util.Set;
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +50,32 @@ public class StatsController {
         return load;
     }
 
+    /*
+     * TEST ONLY: Test responses with calls using various tokens and routes
+     */
+    @RequestMapping(value = "/testme", method = GET)
+    @ResponseBody
+    public String testme(@RequestHeader HttpHeaders headers) {
+        
+        String result = "Null";
+
+        result = "Headers: ";
+        Set<String> keySet = headers.keySet();
+        for (String k:keySet) {
+            result += k + " ";
+        }
+            
+        if (headers.containsKey("X-Permissions")) {
+            result = "\nPermissions: ";
+            List<String> get = headers.get("X-Permissions");
+            for (String g:get) {
+                result += g + " ";
+            }
+        }
+        
+        return result;
+    }
+    
     // Obtain local CPU Load (used by EBI Load Balancer as Heartbeat)
     private static double getProcessCpuLoad() throws Exception {
         MBeanServer mbs    = ManagementFactory.getPlatformMBeanServer();

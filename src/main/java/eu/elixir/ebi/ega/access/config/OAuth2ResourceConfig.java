@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access.config;
+package eu.elixir.ebi.ega.access.config;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -70,6 +71,7 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
                         .antMatchers("/requests/**")
                         .antMatchers("/app/**")
                         .antMatchers("/datasets/ega")
+                        .antMatchers("/stats/testme")
                         .antMatchers("/swagger-ui.html")
                         .antMatchers("/v2/api-docs").and()
                         .authorizeRequests().anyRequest().authenticated()
@@ -88,6 +90,7 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
 		//return new DefaultAccessTokenConverter();
 	}
 	
+        @Primary
 	@Bean
 	public RemoteTokenServices remoteTokenServices(final @Value("${auth.server.url}") String checkTokenUrl,
 			final @Value("${auth.server.clientId}") String clientId,
@@ -99,4 +102,17 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
 		remoteTokenServices.setAccessTokenConverter(accessTokenConverter());
 		return remoteTokenServices;
 	}
+        
+	@Bean
+	public RemoteTokenServices remoteZuulTokenServices(final @Value("${auth.zuul.server.url}") String checkTokenUrl,
+			final @Value("${auth.zuul.server.clientId}") String clientId,
+			final @Value("${auth.zuul.server.clientsecret}") String clientSecret) {
+		final RemoteTokenServices remoteTokenServices = new RemoteTokenServices();
+		remoteTokenServices.setCheckTokenEndpointUrl(checkTokenUrl);
+		remoteTokenServices.setClientId(clientId);
+		remoteTokenServices.setClientSecret(clientSecret);
+		remoteTokenServices.setAccessTokenConverter(accessTokenConverter());
+		return remoteTokenServices;
+	}
+        
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access.dto;
+package eu.elixir.ebi.ega.access.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

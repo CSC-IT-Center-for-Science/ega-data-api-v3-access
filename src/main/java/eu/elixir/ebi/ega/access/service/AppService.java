@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access.service;
+package eu.elixir.ebi.ega.access.service;
 
-import eu.elixir.ebi.aga.access.dto.File;
+import eu.elixir.ebi.ega.access.dto.File;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -39,4 +39,6 @@ public interface AppService {
     @PreAuthorize("#oauth2.hasScope('fuse')")
     public Iterable<String> getDacDatasets(String dacId);
 
+    @PreAuthorize("#oauth2.hasScope('elixir')")
+    public Iterable<String> getElixirDatasets(String userId);
 }
