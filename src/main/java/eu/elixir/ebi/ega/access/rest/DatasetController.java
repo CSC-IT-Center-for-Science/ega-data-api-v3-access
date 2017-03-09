@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access.rest;
+package eu.elixir.ebi.ega.access.rest;
 
-import eu.elixir.ebi.aga.access.dto.File;
-import eu.elixir.ebi.aga.access.service.FileService;
+import eu.elixir.ebi.ega.access.dto.File;
+import eu.elixir.ebi.ega.access.service.FileService;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,8 +48,11 @@ public class DatasetController {
     private FileService fileService;
     
     @RequestMapping(method = GET)
-    public @ResponseBody Iterable<String> list() {
+    public @ResponseBody Iterable<String> list(HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Map<String, String[]> parameters = request.getParameterMap();
+                
+        // EGA AAI: Permissions Provided by EGA AAI
         Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         ArrayList<String> result = new ArrayList<>();
@@ -59,11 +64,15 @@ public class DatasetController {
     }
         
     @RequestMapping(value = "/{dataset_id}/files", method = GET)
-    public @ResponseBody Iterable<File> getDatasetFiles(@PathVariable String dataset_id) {
+    public @ResponseBody Iterable<File> getDatasetFiles(@PathVariable String dataset_id, 
+                                                        HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Map<String, String[]> parameters = request.getParameterMap();
 
         // Validate Dataset Access
         boolean permission = false;
+        
+        // EGA AAI: Permissions Provided by EGA AAI
         Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         while (iterator.hasNext()) {
@@ -73,6 +82,8 @@ public class DatasetController {
                 break;
             }
         }
+        
+        // TODO: ELIXIR User Case: Obtain Permmissions from Header
         
         return permission?(fileService.getDatasetFiles(dataset_id)):(new ArrayList<>());
     }

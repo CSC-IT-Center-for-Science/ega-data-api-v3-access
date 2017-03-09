@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access.service.internal;
+package eu.elixir.ebi.ega.access.service.internal;
 
-import eu.elixir.ebi.aga.access.config.NotFoundException;
-import eu.elixir.ebi.aga.access.config.PermissionsException;
-import eu.elixir.ebi.aga.access.dto.File;
-import eu.elixir.ebi.aga.access.dto.Request;
-import eu.elixir.ebi.aga.access.dto.RequestTicket;
+import eu.elixir.ebi.ega.access.config.NotFoundException;
+import eu.elixir.ebi.ega.access.config.PermissionsException;
+import eu.elixir.ebi.ega.access.dto.File;
+import eu.elixir.ebi.ega.access.dto.Request;
+import eu.elixir.ebi.ega.access.dto.RequestTicket;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import eu.elixir.ebi.aga.access.service.RequestService;
+import eu.elixir.ebi.ega.access.service.RequestService;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;

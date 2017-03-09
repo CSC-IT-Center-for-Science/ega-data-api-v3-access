@@ -13,16 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access;
+package eu.elixir.ebi.ega.access.dto;
 
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public class ServletInitializer extends SpringBootServletInitializer {
-
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(AccessServiceApplication.class);
-	}
-
+/**
+ *
+ * @author asenf
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@Getter
+public class Request {
+    
+    private String type; // FILE or DATASET
+    private String id; // File ID or Dataset ID
+    private String reKey; // Encryption Key chosen by User
+    private String label; // Request label
+    private String start; // Start Coordinate
+    private String end; // End Coordinate
+    
 }

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access.service.internal;
+package eu.elixir.ebi.ega.access.service.internal;
 
-import eu.elixir.ebi.aga.access.dto.File;
-import eu.elixir.ebi.aga.access.service.FileService;
+import eu.elixir.ebi.ega.access.dto.File;
+import eu.elixir.ebi.ega.access.service.FileService;
 
 import java.util.Arrays;
 import java.util.Collection;

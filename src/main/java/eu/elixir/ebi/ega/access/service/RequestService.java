@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access.service;
+package eu.elixir.ebi.ega.access.service;
 
-import eu.elixir.ebi.aga.access.dto.Request;
-import eu.elixir.ebi.aga.access.dto.RequestTicket;
+import eu.elixir.ebi.ega.access.dto.Request;
+import eu.elixir.ebi.ega.access.dto.RequestTicket;
 
 import org.springframework.security.core.Authentication;
 

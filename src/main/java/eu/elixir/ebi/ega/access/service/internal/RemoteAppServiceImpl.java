@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.elixir.ebi.aga.access.service.internal;
+package eu.elixir.ebi.ega.access.service.internal;
 
-import eu.elixir.ebi.aga.access.dto.Dataset;
-import eu.elixir.ebi.aga.access.dto.File;
-import eu.elixir.ebi.aga.access.service.AppService;
+import eu.elixir.ebi.ega.access.dto.Dataset;
+import eu.elixir.ebi.ega.access.dto.File;
+import eu.elixir.ebi.ega.access.service.AppService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,6 +91,26 @@ public class RemoteAppServiceImpl implements AppService {
     @Override
     public Iterable<String> getDacDatasets(String dac_id) {
         Dataset[] response = restTemplate.getForObject(SERVICE_URL + "/dac/" + dac_id + "/datasets/", Dataset[].class);
+
+        ArrayList<String> datasetIds = new ArrayList<>();
+        for (Dataset dataset:response) {
+            datasetIds.add(dataset.getStableId());
+        }
+        
+        return datasetIds;
+    }
+
+    @Override
+    public Iterable<String> getElixirDatasets(String user_id) {
+        // Get EGA for ELIXIR User
+        // TODO: Use hard coded map for now!
+        String ega_user = user_id;
+        if (user_id.equalsIgnoreCase("juha.tornroos@gmail.com")) {
+            ega_user = "...";
+        }        
+        
+        // Perform lookup for EGA User
+        Dataset[] response = restTemplate.getForObject(SERVICE_URL + "/user/" + ega_user + "/datasets/", Dataset[].class);
 
         ArrayList<String> datasetIds = new ArrayList<>();
         for (Dataset dataset:response) {
