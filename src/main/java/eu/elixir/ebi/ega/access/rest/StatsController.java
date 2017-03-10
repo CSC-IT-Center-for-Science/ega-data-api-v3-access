@@ -22,6 +22,7 @@ import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -55,7 +56,7 @@ public class StatsController {
      */
     @RequestMapping(value = "/testme", method = GET)
     @ResponseBody
-    public String testme(@RequestHeader HttpHeaders headers) {
+    public String testme(HttpServletRequest servletRequest, @RequestHeader HttpHeaders headers) {
         
         String result = "Null";
 
@@ -66,12 +67,14 @@ public class StatsController {
         }
             
         if (headers.containsKey("X-Permissions")) {
-            result = "\nPermissions: ";
+            result += "\nPermissions: ";
             List<String> get = headers.get("X-Permissions");
             for (String g:get) {
                 result += g + " ";
             }
         }
+        
+        result += "\nOrigin: " + servletRequest.getRemoteAddr() + "\n";
         
         return result;
     }

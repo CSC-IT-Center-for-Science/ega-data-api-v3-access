@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -53,12 +54,23 @@ public class DatasetController {
         Map<String, String[]> parameters = request.getParameterMap();
                 
         // EGA AAI: Permissions Provided by EGA AAI
-        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         ArrayList<String> result = new ArrayList<>();
-        while (iterator.hasNext()) {
-            GrantedAuthority next = iterator.next();
-            result.add(next.getAuthority());
+        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+        if (authorities != null && authorities.size() > 0) {
+            Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+            while (iterator.hasNext()) {
+                GrantedAuthority next = iterator.next();
+                result.add(next.getAuthority());
+            }
+        } else { // ELIXIR User Case: Obtain Permmissions from X-Permissions Header
+            String permissions = request.getHeader("X-Permissions");
+            if (permissions != null && permissions.length() > 0) {
+                StringTokenizer t = new StringTokenizer(permissions, ",");
+                while (t!=null && t.hasMoreTokens()) {
+                    String ds = t.nextToken();
+                    if (ds!=null && ds.length() > 0) result.add(ds);
+                }
+            }
         }
         return result; // List of datasets authorized for this user
     }
@@ -74,16 +86,28 @@ public class DatasetController {
         
         // EGA AAI: Permissions Provided by EGA AAI
         Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        while (iterator.hasNext()) {
-            GrantedAuthority next = iterator.next();
-            if (dataset_id.equalsIgnoreCase(next.getAuthority())) {
-                permission = true;
-                break;
+        if (authorities != null && authorities.size() > 0) {
+            Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+            while (iterator.hasNext()) {
+                GrantedAuthority next = iterator.next();
+                if (dataset_id.equalsIgnoreCase(next.getAuthority())) {
+                    permission = true;
+                    break;
+                }
+            }
+        } else { // ELIXIR User Case: Obtain Permmissions from X-Permissions Header
+            String permissions = request.getHeader("X-Permissions");
+            if (permissions != null && permissions.length() > 0) {
+                StringTokenizer t = new StringTokenizer(permissions, ",");
+                while (t!=null && t.hasMoreTokens()) {
+                    String ds = t.nextToken();
+                    if (ds != null && dataset_id.equalsIgnoreCase(ds)) {
+                        permission = true;
+                        break;
+                    }
+                }
             }
         }
-        
-        // TODO: ELIXIR User Case: Obtain Permmissions from Header
         
         return permission?(fileService.getDatasetFiles(dataset_id)):(new ArrayList<>());
     }
