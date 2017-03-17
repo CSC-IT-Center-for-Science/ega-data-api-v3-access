@@ -75,7 +75,7 @@ public class RemoteFileServiceImpl implements FileService {
     
     @Override
     public Iterable<File> getDatasetFiles(String dataset_id) {
-        File[] response = restTemplate.getForObject(SERVICE_URL + "/file/datasets/{dataset_id}/", File[].class, dataset_id);
+        File[] response = restTemplate.getForObject(SERVICE_URL + "/datasets/{dataset_id}/files", File[].class, dataset_id);
         return Arrays.asList(response);
     }
     
