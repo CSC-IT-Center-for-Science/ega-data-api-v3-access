@@ -137,13 +137,18 @@
                                 <configuration>
                                         <imageName>ega-data-api/access</imageName>
                                         <baseImage>java:8</baseImage>
-                                        <entryPoint>["java", "-jar", "/${project.build.finalName}.war"]</entryPoint>
+					<entryPoint>["java", "-jar", "/${project.build.finalName}.war"]</entryPoint>
                                         <resources>
                                                 <resource>
                                                         <targetPath>/</targetPath>
                                                         <directory>${project.build.directory}</directory>
                                                         <include>${project.build.finalName}.war</include>
-                                                </resource>
+						</resource>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>src/main/resources</directory>
+							<include>keystore</include>
+						</resource>	
                                         </resources>
                                 </configuration>
                                 <executions>

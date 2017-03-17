@@ -105,7 +105,7 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
 		remoteTokenServices.setCheckTokenEndpointUrl(checkTokenUrl);
 		remoteTokenServices.setClientId(clientId);
 		remoteTokenServices.setClientSecret(clientSecret);
-		remoteTokenServices.setAccessTokenConverter(accessTokenConverter());
+		//remoteTokenServices.setAccessTokenConverter(accessTokenConverter());
 		return remoteTokenServices;
 	}
         
@@ -154,3 +154,4 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
 	}
 */        
 }
+        
