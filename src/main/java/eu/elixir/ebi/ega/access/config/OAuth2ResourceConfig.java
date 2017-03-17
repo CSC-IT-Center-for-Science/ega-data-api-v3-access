@@ -70,6 +70,7 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
                         .antMatchers("/files/**")
                         .antMatchers("/requests/**")
                         .antMatchers("/app/**")
+                        .antMatchers("/ga4gh/**")
                         .antMatchers("/datasets/ega")
                         .antMatchers("/stats/testme")
                         .antMatchers("/swagger-ui.html")
@@ -111,8 +112,38 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
 		remoteTokenServices.setCheckTokenEndpointUrl(checkTokenUrl);
 		remoteTokenServices.setClientId(clientId);
 		remoteTokenServices.setClientSecret(clientSecret);
-		remoteTokenServices.setAccessTokenConverter(accessTokenConverter());
+		//remoteTokenServices.setAccessTokenConverter(accessTokenConverter());
 		return remoteTokenServices;
 	}
-        
+/*        
+        @Primary
+	@Bean
+	public RemoteTokenServices combinedTokenServices(HttpServletRequest request, 
+                                final @Value("${auth.server.url}") String checkTokenUrl,
+                                final @Value("${auth.server.clientId}") String clientId,
+                                final @Value("${auth.server.clientsecret}") String clientSecret,
+                                final @Value("${auth.zuul.server.url}") String zuulCheckTokenUrl,
+                                final @Value("${auth.zuul.server.clientId}") String zuulClientId,
+                                final @Value("${auth.zuul.server.clientsecret}") String zuulClientSecret) {
+		final RemoteTokenServices remoteTokenServices = new RemoteTokenServices();
+                
+                String header = null;
+                try {
+                    header = request.getHeader("X-Permissions");
+                } catch (Throwable t) {System.out.println("Error " + t.getMessage());}
+                
+                if (header!=null && header.length()>0) {
+                    remoteTokenServices.setCheckTokenEndpointUrl(zuulCheckTokenUrl);
+                    remoteTokenServices.setClientId(zuulClientId);
+                    remoteTokenServices.setClientSecret(zuulClientSecret);                    
+                } else {
+                    remoteTokenServices.setCheckTokenEndpointUrl(checkTokenUrl);
+                    remoteTokenServices.setClientId(clientId);
+                    remoteTokenServices.setClientSecret(clientSecret);
+                    remoteTokenServices.setAccessTokenConverter(accessTokenConverter());
+                }
+                
+		return remoteTokenServices;
+	}
+*/        
 }
