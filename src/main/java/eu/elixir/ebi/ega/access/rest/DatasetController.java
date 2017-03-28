@@ -15,14 +15,15 @@
  */
 package eu.elixir.ebi.ega.access.rest;
 
+import eu.elixir.ebi.ega.access.config.VerifyMessage;
 import eu.elixir.ebi.ega.access.dto.File;
 import eu.elixir.ebi.ega.access.service.FileService;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -63,14 +64,18 @@ public class DatasetController {
                 result.add(next.getAuthority());
             }
         } else { // ELIXIR User Case: Obtain Permmissions from X-Permissions Header
-            String permissions = request.getHeader("X-Permissions");
-            if (permissions != null && permissions.length() > 0) {
-                StringTokenizer t = new StringTokenizer(permissions, ",");
-                while (t!=null && t.hasMoreTokens()) {
-                    String ds = t.nextToken();
-                    if (ds!=null && ds.length() > 0) result.add(ds);
+            //String permissions = request.getHeader("X-Permissions");
+            try {
+                List<String> permissions = (new VerifyMessage(request.getHeader("X-Permissions"))).getPermissions();
+                if (permissions != null && permissions.size() > 0) {
+                    //StringTokenizer t = new StringTokenizer(permissions, ",");
+                    //while (t!=null && t.hasMoreTokens()) {
+                    for (String ds:permissions) {
+                        //String ds = t.nextToken();
+                        if (ds!=null && ds.length() > 0) result.add(ds);
+                    }
                 }
-            }
+            } catch (Exception ex) {}
         }
         return result; // List of datasets authorized for this user
     }
@@ -96,17 +101,21 @@ public class DatasetController {
                 }
             }
         } else { // ELIXIR User Case: Obtain Permmissions from X-Permissions Header
-            String permissions = request.getHeader("X-Permissions");
-            if (permissions != null && permissions.length() > 0) {
-                StringTokenizer t = new StringTokenizer(permissions, ",");
-                while (t!=null && t.hasMoreTokens()) {
-                    String ds = t.nextToken();
-                    if (ds != null && dataset_id.equalsIgnoreCase(ds)) {
-                        permission = true;
-                        break;
+            //String permissions = request.getHeader("X-Permissions");
+            try {
+                List<String> permissions = (new VerifyMessage(request.getHeader("X-Permissions"))).getPermissions();
+                if (permissions != null && permissions.size() > 0) {
+                    //StringTokenizer t = new StringTokenizer(permissions, ",");
+                    //while (t!=null && t.hasMoreTokens()) {
+                    for (String ds:permissions) {
+                        //String ds = t.nextToken();
+                        if (ds != null && dataset_id.equalsIgnoreCase(ds)) {
+                            permission = true;
+                            break;
+                        }
                     }
                 }
-            }
+            } catch (Exception ex) {}
         }
         
         return permission?(fileService.getDatasetFiles(dataset_id)):(new ArrayList<>());
