@@ -15,6 +15,8 @@
  */
 package eu.elixir.ebi.ega.access.service.internal;
 
+import com.netflix.appinfo.InstanceInfo.InstanceStatus;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import eu.elixir.ebi.ega.access.config.NotFoundException;
 import eu.elixir.ebi.ega.access.config.PermissionsException;
 import eu.elixir.ebi.ega.access.dto.File;
@@ -52,12 +54,14 @@ public class RemoteRequestServiceImpl implements RequestService {
     RestTemplate restTemplate;    
     
     @Override
+    @HystrixCommand
     public Iterable<String> listRequests(String user_email) {
         String[] requests = restTemplate.getForObject(SERVICE_URL + "/request/{user_email}/", String[].class, user_email);
         return Arrays.asList(requests);        
     }
 
     @Override
+    @HystrixCommand
     public void newRequest(Authentication auth, String ip, Request request) {
         String user_email = auth.getName();
         
@@ -125,17 +129,20 @@ public class RemoteRequestServiceImpl implements RequestService {
     }
 
     @Override
+    @HystrixCommand
     public Iterable<RequestTicket> listRequestTickets(String user_email, String request_label) {
         RequestTicket[] tickets = restTemplate.getForObject(SERVICE_URL + "/request/{user_email}/{request_label}/", RequestTicket[].class, user_email, request_label);
         return Arrays.asList(tickets);        
     }
 
     @Override
+    @HystrixCommand
     public void deleteRequest(String user_email, String request_label) {
         restTemplate.delete(SERVICE_URL + "/request/{user_email}/{label}/", user_email, request_label);
     }
 
     @Override
+    @HystrixCommand
     public RequestTicket listOneRequestTicket(String user_email, String request_label, String ticket) {
         // label not used at the moment
         RequestTicket ticketObject = restTemplate.getForObject(SERVICE_URL + "/request/ticket/{ticket}/", RequestTicket.class, ticket);
@@ -143,8 +150,9 @@ public class RemoteRequestServiceImpl implements RequestService {
     }
 
     @Override
+    @HystrixCommand
     public void deleteOneRequestTicket(String user_email, String request_label, String ticket) {
         restTemplate.delete(SERVICE_URL + "/request/{user_email}/ticket/{ticket}/", user_email, ticket);
     }
-    
+ 
 }

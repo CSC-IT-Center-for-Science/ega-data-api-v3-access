@@ -15,6 +15,7 @@
  */
 package eu.elixir.ebi.ega.access.service.internal;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import eu.elixir.ebi.ega.access.dto.Dataset;
 import eu.elixir.ebi.ega.access.dto.File;
 import eu.elixir.ebi.ega.access.service.AppService;
@@ -44,6 +45,7 @@ public class RemoteAppServiceImpl implements AppService {
     RestTemplate restTemplate;
 
     @Override
+    @HystrixCommand
     public Iterable<String> getPublicKeyOrgs() {
         String[] response = restTemplate.getForObject(RES_URL + "/file/availableformats/", String[].class);
         
@@ -58,6 +60,7 @@ public class RemoteAppServiceImpl implements AppService {
     }
     
     @Override
+    @HystrixCommand
     public Iterable<String> getDatasets() {
         Dataset[] response = restTemplate.getForObject(SERVICE_URL + "/datasets/", Dataset[].class);
 
@@ -70,6 +73,7 @@ public class RemoteAppServiceImpl implements AppService {
     }
     
     @Override
+    @HystrixCommand
     public Iterable<String> getDatasetsByOrg(String org) {
         Dataset[] response = restTemplate.getForObject(SERVICE_URL + "/datasets/org/{org}", Dataset[].class, org);
 
@@ -82,6 +86,7 @@ public class RemoteAppServiceImpl implements AppService {
     }
 
     @Override
+    @HystrixCommand
     public Iterable<File> getDatasetFiles(String dataset_id) {
         File[] response = restTemplate.getForObject(SERVICE_URL + "/datasets/{dataset_id}/files/", File[].class, dataset_id);
 
@@ -89,6 +94,7 @@ public class RemoteAppServiceImpl implements AppService {
     }
     
     @Override
+    @HystrixCommand
     public Iterable<String> getDacDatasets(String dac_id) {
         Dataset[] response = restTemplate.getForObject(SERVICE_URL + "/dac/" + dac_id + "/datasets/", Dataset[].class);
 
@@ -101,6 +107,7 @@ public class RemoteAppServiceImpl implements AppService {
     }
 
     @Override
+    @HystrixCommand
     public Iterable<String> getElixirDatasets(String user_id) {
         // Get EGA for ELIXIR User
         // TODO: Use hard coded map for now!
