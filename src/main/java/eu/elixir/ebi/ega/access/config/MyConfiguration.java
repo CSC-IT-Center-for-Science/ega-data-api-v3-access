@@ -19,6 +19,8 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -29,7 +31,7 @@ import springfox.documentation.spring.web.plugins.Docket;
  * @author asenf
  */
 @Configuration
-public class MyConfiguration { 
+public class MyConfiguration extends WebMvcConfigurerAdapter { 
 
     // Ribbon Load Balanced Rest Template for communication with other Microservices
     
@@ -38,7 +40,17 @@ public class MyConfiguration {
     RestTemplate restTemplate() {
         return new RestTemplate();
     }
-    
+/* 
+    @Bean
+    HystrixContextInterceptor hystrixContextInterceptor() {
+        return new HystrixContextInterceptor();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(hystrixContextInterceptor());
+    }
+*/    
     @Bean
     public Docket swaggerSettings() {
         return new Docket(DocumentationType.SWAGGER_2)

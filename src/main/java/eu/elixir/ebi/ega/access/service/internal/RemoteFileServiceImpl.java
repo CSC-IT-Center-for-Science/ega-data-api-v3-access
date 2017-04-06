@@ -15,6 +15,8 @@
  */
 package eu.elixir.ebi.ega.access.service.internal;
 
+import com.netflix.appinfo.InstanceInfo;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import eu.elixir.ebi.ega.access.dto.File;
 import eu.elixir.ebi.ega.access.service.FileService;
 
@@ -47,6 +49,7 @@ public class RemoteFileServiceImpl implements FileService {
     RestTemplate restTemplate;
 
     @Override
+    @HystrixCommand
     public File getFile(Authentication auth, String file_id) {
         ResponseEntity<File[]> forEntity = restTemplate.getForEntity(SERVICE_URL + "/file/{file_id}", File[].class, file_id);
 
@@ -74,6 +77,7 @@ public class RemoteFileServiceImpl implements FileService {
     }
     
     @Override
+    @HystrixCommand
     public Iterable<File> getDatasetFiles(String dataset_id) {
         File[] response = restTemplate.getForObject(SERVICE_URL + "/datasets/{dataset_id}/files", File[].class, dataset_id);
         return Arrays.asList(response);
