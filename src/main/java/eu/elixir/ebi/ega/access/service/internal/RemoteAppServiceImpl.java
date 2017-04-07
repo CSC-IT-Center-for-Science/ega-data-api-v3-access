@@ -75,11 +75,11 @@ public class RemoteAppServiceImpl implements AppService {
     @Override
     @HystrixCommand
     public Iterable<String> getDatasetsByOrg(String org) {
-        Dataset[] response = restTemplate.getForObject(SERVICE_URL + "/datasets/org/{org}", Dataset[].class, org);
+        String[] response = restTemplate.getForObject(SERVICE_URL + "/datasets/org/{org}", String[].class, org);
 
         ArrayList<String> datasetIds = new ArrayList<>();
-        for (Dataset dataset:response) {
-            datasetIds.add(dataset.getStableId());
+        for (String dataset:response) {
+            datasetIds.add(dataset);
         }
         
         return datasetIds;
