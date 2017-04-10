@@ -109,15 +109,9 @@ public class RemoteAppServiceImpl implements AppService {
     @Override
     @HystrixCommand
     public Iterable<String> getElixirDatasets(String user_id) {
-        // Get EGA for ELIXIR User
-        // TODO: Use hard coded map for now!
-        String ega_user = user_id;
-        if (user_id.equalsIgnoreCase("juha.tornroos@gmail.com")) {
-            ega_user = "...";
-        }        
         
-        // Perform lookup for EGA User
-        Dataset[] response = restTemplate.getForObject(SERVICE_URL + "/user/" + ega_user + "/datasets/", Dataset[].class);
+        // Perform lookup for User (EGA and ELIXIR)
+        Dataset[] response = restTemplate.getForObject(SERVICE_URL + "/user/" + user_id + "/datasets/", Dataset[].class);
 
         ArrayList<String> datasetIds = new ArrayList<>();
         for (Dataset dataset:response) {
