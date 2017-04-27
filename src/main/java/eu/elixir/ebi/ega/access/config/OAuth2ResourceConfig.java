@@ -72,13 +72,14 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
                         .antMatchers("/app/**")
                         .antMatchers("/ga4gh/**")
                         .antMatchers("/datasets/ega")
-                        .antMatchers("/stats/testme")
-                        .antMatchers("/swagger-ui.html")
-                        .antMatchers("/v2/api-docs").and()
+                        .antMatchers("/stats/testme").and()
                         .authorizeRequests().anyRequest().authenticated()
                         .and()
                         .csrf().disable();
 	}
+         
+        //              .antMatchers("/swagger-ui.html")
+        //              .antMatchers("/v2/api-docs")
 
         // This is a bit of a Hack! MitreID doesn't return 'user_name' but 'user_id', The
         // customized User Authentication Converter simply changes the field name for extraction
