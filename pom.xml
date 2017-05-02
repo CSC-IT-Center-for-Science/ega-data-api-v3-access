@@ -116,7 +116,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-                        <plugin>
+			<!-- <plugin>
                                 <groupId>com.spotify</groupId>
                                 <artifactId>docker-maven-plugin</artifactId>
                                 <version>0.4.11</version>
@@ -141,7 +141,7 @@
                                         </goals>
                                     </execution>
                                 </executions>
-                        </plugin>
+			</plugin> -->
 		</plugins>
 	</build>
 
