@@ -40,5 +40,6 @@ Only at Central EGA:
 ### Todos
 
  - Write Tests
+ - CI
  - Develop GA4GH Functionality
 
