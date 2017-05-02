@@ -40,6 +40,5 @@ Only at Central EGA:
 ### Todos
 
  - Write Tests
- - Continous integration (Openshift)
  - Develop GA4GH Functionality
 
