@@ -24,11 +24,13 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableCircuitBreaker
 @EnableHystrix
 @SpringBootApplication
+@EnableSwagger2
 @Import({MyConfiguration.class, OAuth2ResourceConfig.class})
 @EnableEurekaClient
 public class AccessServiceApplication {
