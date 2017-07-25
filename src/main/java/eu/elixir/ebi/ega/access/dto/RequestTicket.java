@@ -30,10 +30,10 @@ import lombok.Setter;
 @Getter
 public class RequestTicket {
     
-        private String userEmail;
+        private String email;
         private String downloadTicket;
         private String clientIp;
-        private String fileStableId;
+        private String fileId;
         private String encryptionKey;
         private String encryptionType;
         private String ticketStatus;
@@ -43,13 +43,13 @@ public class RequestTicket {
         private long endCoordinate;
         
         public String toString() {
-            return userEmail+":"+downloadTicket+":"+clientIp+":"+fileStableId+":"+encryptionKey+":"+encryptionType+":"+ticketStatus+":"+label+":"+startCoordinate+":"+endCoordinate;
+            return email+":"+downloadTicket+":"+clientIp+":"+fileId+":"+encryptionKey+":"+encryptionType+":"+ticketStatus+":"+label+":"+startCoordinate+":"+endCoordinate;
         }
         
-        public RequestTicket(String userEmail,
+        public RequestTicket(String email,
                              String downloadTicket,
                              String clientIp,
-                             String fileStableId,
+                             String fileId,
                              String encryptionKey,
                              String encryptionType,
                              String ticketStatus,
@@ -58,10 +58,10 @@ public class RequestTicket {
                              long startCoordinate,
                              long endCoordinate) {
             
-            this.userEmail = userEmail;
+            this.email = email;
             this.downloadTicket = downloadTicket;
             this.clientIp = clientIp;
-            this.fileStableId = fileStableId;
+            this.fileId = fileId;
             this.encryptionKey = "***"; // Hide this information - it does not leave the EGA Vault!
             this.encryptionType = encryptionType;
             this.ticketStatus = ticketStatus;

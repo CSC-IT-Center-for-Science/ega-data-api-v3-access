@@ -29,8 +29,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Dataset {
-        private int datasetId;
-        private String stableId;
+        private String datasetId;
         private String description;
         private String dacStableId;
         private String doubleSignature;

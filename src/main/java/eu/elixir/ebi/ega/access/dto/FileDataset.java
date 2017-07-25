@@ -28,10 +28,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-public class File {
+public class FileDataset {
         private String fileId;
         private String datasetId;
-        private String fileName;
-        private long fileSize;
-        private String fileStatus;    
 }
