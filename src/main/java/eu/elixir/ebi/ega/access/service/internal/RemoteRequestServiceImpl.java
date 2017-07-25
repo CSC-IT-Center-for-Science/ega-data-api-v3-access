@@ -15,7 +15,6 @@
  */
 package eu.elixir.ebi.ega.access.service.internal;
 
-import com.netflix.appinfo.InstanceInfo.InstanceStatus;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import eu.elixir.ebi.ega.access.config.NotFoundException;
 import eu.elixir.ebi.ega.access.config.PermissionsException;
@@ -55,15 +54,15 @@ public class RemoteRequestServiceImpl implements RequestService {
     
     @Override
     @HystrixCommand
-    public Iterable<String> listRequests(String user_email) {
-        String[] requests = restTemplate.getForObject(SERVICE_URL + "/request/{user_email}/", String[].class, user_email);
+    public Iterable<String> listRequests(String email) {
+        String[] requests = restTemplate.getForObject(SERVICE_URL + "/request/{email}/", String[].class, email);
         return Arrays.asList(requests);        
     }
 
     @Override
     @HystrixCommand
     public void newRequest(Authentication auth, String ip, Request request) {
-        String user_email = auth.getName();
+        String email = auth.getName();
         
         // Process: Turn a 'Request' into a List<RequestTicket> ()
         ArrayList<File> requestFiles = new ArrayList<>();
@@ -83,7 +82,7 @@ public class RemoteRequestServiceImpl implements RequestService {
             File[] forEntityBody = forEntity.getBody();
             if (forEntityBody != null && forEntityBody.length>0) {
                 for (int i=0; i<forEntityBody.length; i++) {
-                    String dataset_id = forEntityBody[i].getDatasetStableId();
+                    String dataset_id = forEntityBody[i].getDatasetId();
                     if(permissions.contains(dataset_id)) {
                         requestFiles.add(forEntityBody[i]);
                         break;
@@ -113,9 +112,9 @@ public class RemoteRequestServiceImpl implements RequestService {
                 t.setDownloadTicket(uuid.toString());
                 t.setEncryptionKey(request.getReKey());
                 t.setEncryptionType("AES128"); // Default for Distribution via Ticket
-                t.setFileStableId(f.getStableId());
+                t.setFileId(f.getFileId());
                 t.setLabel(request.getLabel());
-                t.setUserEmail(user_email);
+                t.setEmail(email);
                 t.setTicketStatus("ready");
                 t.setClientIp(ip);
                 t.setCreated(new Timestamp(System.currentTimeMillis()));
@@ -130,20 +129,20 @@ public class RemoteRequestServiceImpl implements RequestService {
 
     @Override
     @HystrixCommand
-    public Iterable<RequestTicket> listRequestTickets(String user_email, String request_label) {
-        RequestTicket[] tickets = restTemplate.getForObject(SERVICE_URL + "/request/{user_email}/{request_label}/", RequestTicket[].class, user_email, request_label);
+    public Iterable<RequestTicket> listRequestTickets(String email, String request_label) {
+        RequestTicket[] tickets = restTemplate.getForObject(SERVICE_URL + "/request/{email}/{request_label}/", RequestTicket[].class, email, request_label);
         return Arrays.asList(tickets);        
     }
 
     @Override
     @HystrixCommand
-    public void deleteRequest(String user_email, String request_label) {
-        restTemplate.delete(SERVICE_URL + "/request/{user_email}/{label}/", user_email, request_label);
+    public void deleteRequest(String email, String request_label) {
+        restTemplate.delete(SERVICE_URL + "/request/{email}/{label}/", email, request_label);
     }
 
     @Override
     @HystrixCommand
-    public RequestTicket listOneRequestTicket(String user_email, String request_label, String ticket) {
+    public RequestTicket listOneRequestTicket(String email, String request_label, String ticket) {
         // label not used at the moment
         RequestTicket ticketObject = restTemplate.getForObject(SERVICE_URL + "/request/ticket/{ticket}/", RequestTicket.class, ticket);
         return ticketObject;
@@ -151,8 +150,8 @@ public class RemoteRequestServiceImpl implements RequestService {
 
     @Override
     @HystrixCommand
-    public void deleteOneRequestTicket(String user_email, String request_label, String ticket) {
-        restTemplate.delete(SERVICE_URL + "/request/{user_email}/ticket/{ticket}/", user_email, ticket);
+    public void deleteOneRequestTicket(String email, String request_label, String ticket) {
+        restTemplate.delete(SERVICE_URL + "/request/{email}/ticket/{ticket}/", email, ticket);
     }
  
 }

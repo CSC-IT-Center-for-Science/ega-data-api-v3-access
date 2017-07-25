@@ -66,7 +66,7 @@ public class RemoteAppServiceImpl implements AppService {
 
         ArrayList<String> datasetIds = new ArrayList<>();
         for (Dataset dataset:response) {
-            datasetIds.add(dataset.getStableId());
+            datasetIds.add(dataset.getDatasetId());
         }
         
         return datasetIds;
@@ -100,7 +100,7 @@ public class RemoteAppServiceImpl implements AppService {
 
         ArrayList<String> datasetIds = new ArrayList<>();
         for (Dataset dataset:response) {
-            datasetIds.add(dataset.getStableId());
+            datasetIds.add(dataset.getDatasetId());
         }
         
         return datasetIds;
@@ -115,7 +115,7 @@ public class RemoteAppServiceImpl implements AppService {
 
         ArrayList<String> datasetIds = new ArrayList<>();
         for (Dataset dataset:response) {
-            datasetIds.add(dataset.getStableId());
+            datasetIds.add(dataset.getDatasetId());
         }
         
         return datasetIds;

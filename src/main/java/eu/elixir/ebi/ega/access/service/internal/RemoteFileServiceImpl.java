@@ -15,9 +15,9 @@
  */
 package eu.elixir.ebi.ega.access.service.internal;
 
-import com.netflix.appinfo.InstanceInfo;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import eu.elixir.ebi.ega.access.dto.File;
+import eu.elixir.ebi.ega.access.dto.FileDataset;
 import eu.elixir.ebi.ega.access.service.FileService;
 
 import java.util.Arrays;
@@ -51,7 +51,8 @@ public class RemoteFileServiceImpl implements FileService {
     @Override
     @HystrixCommand
     public File getFile(Authentication auth, String file_id) {
-        ResponseEntity<File[]> forEntity = restTemplate.getForEntity(SERVICE_URL + "/file/{file_id}", File[].class, file_id);
+        ResponseEntity<FileDataset[]> forEntityDataset = restTemplate.getForEntity(SERVICE_URL + "/file/{file_id}/datasets", FileDataset[].class, file_id);
+        FileDataset[] bodyDataset = forEntityDataset.getBody();
 
         // Obtain all Authorised Datasets
         HashSet<String> permissions = new HashSet<>();
@@ -63,12 +64,15 @@ public class RemoteFileServiceImpl implements FileService {
         }
         
         // Is this File in at least one Authoised Dataset?
+        ResponseEntity<File[]> forEntity = restTemplate.getForEntity(SERVICE_URL + "/file/{file_id}", File[].class, file_id);
         File[] body = forEntity.getBody();
-        if (body!=null) {
-            for (File f:body) {
-                String dataset_id = f.getDatasetStableId();
-                if (permissions.contains(dataset_id)) {
-                    return f;
+        if (body!=null && bodyDataset!=null) {
+            for (FileDataset f:bodyDataset) {
+                String dataset_id = f.getDatasetId();
+                if (permissions.contains(dataset_id) && body.length>=1) {
+                    File ff = body[0];
+                    ff.setDatasetId(dataset_id);
+                    return ff;
                 }
             }
         }
