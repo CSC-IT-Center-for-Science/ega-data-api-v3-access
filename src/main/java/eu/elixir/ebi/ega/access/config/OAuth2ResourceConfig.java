@@ -97,7 +97,7 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
 	public RemoteTokenServices remoteTokenServices(final @Value("${auth.server.url}") String checkTokenUrl,
 			final @Value("${auth.server.clientId}") String clientId,
 			final @Value("${auth.server.clientsecret}") String clientSecret) {
-		final RemoteTokenServices remoteTokenServices = new RemoteTokenServices();
+		final CachingRemoteTokenService remoteTokenServices = new CachingRemoteTokenService();
 		remoteTokenServices.setCheckTokenEndpointUrl(checkTokenUrl);
 		remoteTokenServices.setClientId(clientId);
 		remoteTokenServices.setClientSecret(clientSecret);
@@ -109,7 +109,7 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
 	public RemoteTokenServices remoteZuulTokenServices(final @Value("${auth.zuul.server.url}") String checkTokenUrl,
 			final @Value("${auth.zuul.server.clientId}") String clientId,
 			final @Value("${auth.zuul.server.clientsecret}") String clientSecret) {
-		final RemoteTokenServices remoteTokenServices = new RemoteTokenServices();
+		final CachingRemoteTokenService remoteTokenServices = new CachingRemoteTokenService();
 		remoteTokenServices.setCheckTokenEndpointUrl(checkTokenUrl);
 		remoteTokenServices.setClientId(clientId);
 		remoteTokenServices.setClientSecret(clientSecret);
