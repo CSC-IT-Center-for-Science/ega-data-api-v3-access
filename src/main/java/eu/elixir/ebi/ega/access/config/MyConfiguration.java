@@ -15,11 +15,13 @@
  */
 package eu.elixir.ebi.ega.access.config;
 
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -31,6 +33,7 @@ import springfox.documentation.spring.web.plugins.Docket;
  * @author asenf
  */
 @Configuration
+@EnableCaching
 public class MyConfiguration extends WebMvcConfigurerAdapter { 
 
     // Ribbon Load Balanced Rest Template for communication with other Microservices
@@ -60,4 +63,9 @@ public class MyConfiguration extends WebMvcConfigurerAdapter {
                 .build()
                 .pathMapping("/");
     }
+    
+    @Bean
+    public CacheManager cacheManager() {
+        return new ConcurrentMapCacheManager("tokens");
+    }    
 }
