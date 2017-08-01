@@ -21,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -45,6 +46,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Order(1)
 @Configuration
 @EnableResourceServer
+@EnableCaching
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
 
