@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -94,6 +95,7 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
 	
         @Primary
 	@Bean
+        @Lazy
 	public RemoteTokenServices remoteTokenServices(final @Value("${auth.server.url}") String checkTokenUrl,
 			final @Value("${auth.server.clientId}") String clientId,
 			final @Value("${auth.server.clientsecret}") String clientSecret) {
@@ -106,6 +108,7 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
 	}
         
 	@Bean
+        @Lazy
 	public RemoteTokenServices remoteZuulTokenServices(final @Value("${auth.zuul.server.url}") String checkTokenUrl,
 			final @Value("${auth.zuul.server.clientId}") String clientId,
 			final @Value("${auth.zuul.server.clientsecret}") String clientSecret) {
@@ -119,6 +122,7 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
 /*        
         @Primary
 	@Bean
+        @Lazy
 	public RemoteTokenServices combinedTokenServices(HttpServletRequest request, 
                                 final @Value("${auth.server.url}") String checkTokenUrl,
                                 final @Value("${auth.server.clientId}") String clientId,
