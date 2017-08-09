@@ -24,7 +24,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,9 +43,6 @@ public class ApplicationController {
     
     @Autowired
     private AppService appService;
-    
-    @Autowired
-    private OAuth2ClientContext oAuth2ClientContext;    
     
     @RequestMapping(value = "/orgs", method = GET)
     public @ResponseBody Iterable<String> list() {

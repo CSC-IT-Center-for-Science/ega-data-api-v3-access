@@ -15,9 +15,12 @@
  */
 package eu.elixir.ebi.ega.access.config;
 
+import java.util.Arrays;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -64,8 +67,19 @@ public class MyConfiguration extends WebMvcConfigurerAdapter {
                 .pathMapping("/");
     }
     
+    //@Bean
+    //public CacheManager cacheManager() {
+    //    return new ConcurrentMapCacheManager("tokens");
+    //}    
+
     @Bean
-    public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("tokens");
-    }    
+    public CacheManager concurrentCacheManager() {
+
+            ConcurrentMapCacheManager manager = new ConcurrentMapCacheManager();
+            manager.setCacheNames(Arrays.asList("tokens", "fileFile", "fileDatasetFile", 
+                    "appOrgCache", "appDatasetCache", "appOrgDatasetCache", "appDatasetFileCache", 
+                    "appDacDatasetCache", "appElixirDatasetCache"));
+
+            return manager;
+    }
 }

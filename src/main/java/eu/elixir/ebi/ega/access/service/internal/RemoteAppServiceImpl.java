@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +47,7 @@ public class RemoteAppServiceImpl implements AppService {
 
     @Override
     @HystrixCommand
+    @Cacheable(cacheNames="appOrgCache")
     public Iterable<String> getPublicKeyOrgs() {
         String[] response = restTemplate.getForObject(RES_URL + "/file/availableformats/", String[].class);
         
@@ -61,6 +63,7 @@ public class RemoteAppServiceImpl implements AppService {
     
     @Override
     @HystrixCommand
+    @Cacheable(cacheNames="appDatasetCache")
     public Iterable<String> getDatasets() {
         Dataset[] response = restTemplate.getForObject(SERVICE_URL + "/datasets/", Dataset[].class);
 
@@ -74,6 +77,7 @@ public class RemoteAppServiceImpl implements AppService {
     
     @Override
     @HystrixCommand
+    @Cacheable(cacheNames="appOrgDatasetCache")
     public Iterable<String> getDatasetsByOrg(String org) {
         String[] response = restTemplate.getForObject(SERVICE_URL + "/datasets/org/{org}", String[].class, org);
 
@@ -87,6 +91,7 @@ public class RemoteAppServiceImpl implements AppService {
 
     @Override
     @HystrixCommand
+    @Cacheable(cacheNames="appDatasetFileCache")
     public Iterable<File> getDatasetFiles(String dataset_id) {
         File[] response = restTemplate.getForObject(SERVICE_URL + "/datasets/{dataset_id}/files/", File[].class, dataset_id);
 
@@ -95,6 +100,7 @@ public class RemoteAppServiceImpl implements AppService {
     
     @Override
     @HystrixCommand
+    @Cacheable(cacheNames="appDacDatasetCache")
     public Iterable<String> getDacDatasets(String dac_id) {
         Dataset[] response = restTemplate.getForObject(SERVICE_URL + "/dac/" + dac_id + "/datasets/", Dataset[].class);
 
@@ -108,6 +114,7 @@ public class RemoteAppServiceImpl implements AppService {
 
     @Override
     @HystrixCommand
+    @Cacheable(cacheNames="appElixirDatasetCache")
     public Iterable<String> getElixirDatasets(String user_id) {
         
         // Perform lookup for User (EGA and ELIXIR)

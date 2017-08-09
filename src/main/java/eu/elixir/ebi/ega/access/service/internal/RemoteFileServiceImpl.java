@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,7 @@ public class RemoteFileServiceImpl implements FileService {
 
     @Override
     @HystrixCommand
+    @Cacheable(cacheNames="fileFile")
     public File getFile(Authentication auth, String file_id) {
         ResponseEntity<FileDataset[]> forEntityDataset = restTemplate.getForEntity(SERVICE_URL + "/file/{file_id}/datasets", FileDataset[].class, file_id);
         FileDataset[] bodyDataset = forEntityDataset.getBody();
@@ -82,6 +84,7 @@ public class RemoteFileServiceImpl implements FileService {
     
     @Override
     @HystrixCommand
+    @Cacheable(cacheNames="fileDatasetFile")
     public Iterable<File> getDatasetFiles(String dataset_id) {
         File[] response = restTemplate.getForObject(SERVICE_URL + "/datasets/{dataset_id}/files", File[].class, dataset_id);
         return Arrays.asList(response);
