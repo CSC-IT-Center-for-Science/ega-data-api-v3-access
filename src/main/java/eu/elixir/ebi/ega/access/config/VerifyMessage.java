@@ -53,9 +53,9 @@ public class VerifyMessage {
                 }
                 
                 // Check timestamp; if too old, wipe permissions (10 minutes) - has t be tested.... (different machines, different timezones...)
-                long timestamp_delta = System.currentTimeMillis() - Long.parseLong(dataset);
-                if (timestamp_delta > 600000)
-                    messages = new ArrayList<>();
+                //long timestamp_delta = System.currentTimeMillis() - Long.parseLong(dataset);
+                //if (timestamp_delta > 600000)
+                //    messages = new ArrayList<>();
             }
             
 	    //System.out.println(verifySignature(list.get(0), list.get(1), keyFile) ? "VERIFIED MESSAGE" + "\n----------------\n" + new String(list.get(0)) : "Could not verify the signature.");	    
