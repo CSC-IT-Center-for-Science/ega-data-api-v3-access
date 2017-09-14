@@ -95,7 +95,6 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
 		//return new DefaultAccessTokenConverter();
 	}
 	
-        @Primary
 	@Bean
         @Lazy
 	public RemoteTokenServices remoteTokenServices(final @Value("${auth.server.url}") String checkTokenUrl,
@@ -108,7 +107,8 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
 		//remoteTokenServices.setAccessTokenConverter(accessTokenConverter());
 		return remoteTokenServices;
 	}
-        
+       
+	@Primary 
 	@Bean
         @Lazy
 	public RemoteTokenServices remoteZuulTokenServices(final @Value("${auth.zuul.server.url}") String checkTokenUrl,
