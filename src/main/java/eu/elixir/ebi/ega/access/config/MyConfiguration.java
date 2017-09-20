@@ -15,11 +15,14 @@
  */
 package eu.elixir.ebi.ega.access.config;
 
+import com.google.common.cache.CacheBuilder;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.cache.guava.GuavaCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -72,14 +75,51 @@ public class MyConfiguration extends WebMvcConfigurerAdapter {
     //    return new ConcurrentMapCacheManager("tokens");
     //}    
 
+    //@Bean
+    //public CacheManager concurrentCacheManager() {
+    //
+    //        ConcurrentMapCacheManager manager = new ConcurrentMapCacheManager();
+    //        manager.setCacheNames(Arrays.asList("tokens", "fileFile", "fileDatasetFile", 
+    //                "appOrgCache", "appDatasetCache", "appOrgDatasetCache", "appDatasetFileCache", 
+    //                "appDacDatasetCache", "appElixirDatasetCache"));
+    //
+    //        return manager;
+    //}
+
     @Bean
-    public CacheManager concurrentCacheManager() {
-
-            ConcurrentMapCacheManager manager = new ConcurrentMapCacheManager();
-            manager.setCacheNames(Arrays.asList("tokens", "fileFile", "fileDatasetFile", 
-                    "appOrgCache", "appDatasetCache", "appOrgDatasetCache", "appDatasetFileCache", 
-                    "appDacDatasetCache", "appElixirDatasetCache"));
-
-            return manager;
+    public CacheManager cacheManager() {
+        SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
+        GuavaCache tokens = new GuavaCache("tokens", CacheBuilder.newBuilder()
+                .expireAfterAccess(1, TimeUnit.HOURS)
+                .build());
+        GuavaCache fileFile = new GuavaCache("fileFile", CacheBuilder.newBuilder()
+                .expireAfterAccess(24, TimeUnit.HOURS)
+                .build());
+        GuavaCache fileDatasetFile = new GuavaCache("fileDatasetFile", CacheBuilder.newBuilder()
+                .expireAfterAccess(24, TimeUnit.HOURS)
+                .build());
+        GuavaCache appOrgCache = new GuavaCache("appOrgCache", CacheBuilder.newBuilder()
+                .expireAfterAccess(24, TimeUnit.HOURS)
+                .build());
+        GuavaCache appDatasetCache = new GuavaCache("appDatasetCache", CacheBuilder.newBuilder()
+                .expireAfterAccess(24, TimeUnit.HOURS)
+                .build());
+        GuavaCache appOrgDatasetCache = new GuavaCache("appOrgDatasetCache", CacheBuilder.newBuilder()
+                .expireAfterAccess(24, TimeUnit.HOURS)
+                .build());
+        GuavaCache appDatasetFileCache = new GuavaCache("appDatasetFileCache", CacheBuilder.newBuilder()
+                .expireAfterAccess(24, TimeUnit.HOURS)
+                .build());
+        GuavaCache appDacDatasetCache = new GuavaCache("appDacDatasetCache", CacheBuilder.newBuilder()
+                .expireAfterAccess(24, TimeUnit.HOURS)
+                .build());
+        GuavaCache appElixirDatasetCache = new GuavaCache("appElixirDatasetCache", CacheBuilder.newBuilder()
+                .expireAfterAccess(24, TimeUnit.HOURS)
+                .build());
+        
+        simpleCacheManager.setCaches(Arrays.asList(tokens, fileFile, fileDatasetFile, 
+                    appOrgCache, appDatasetCache, appOrgDatasetCache, appDatasetFileCache, 
+                    appDacDatasetCache, appElixirDatasetCache));
+        return simpleCacheManager;
     }
 }
